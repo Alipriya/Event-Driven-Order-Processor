@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-processor
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: order-processor
+  template:
+    metadata:
+      labels:
+        app: order-processor
+    spec:
+      containers:
+      - name: processor
+        image: your-repo/order-processor:latest
+        envFrom:
+        - secretRef:
+            name: order-secrets
+        ports:
+        - containerPort: 4000

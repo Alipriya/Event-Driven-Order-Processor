@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-processor-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: order-processor
+  ports:
+  - port: 80
+    targetPort: 4000

@@ -1,0 +1,21 @@
+service: order-processor
+provider:
+  name: aws
+  runtime: nodejs18.x
+  environment:
+    MONGO_URI: ${env:MONGO_URI}
+    RABBITMQ_URL: ${env:RABBITMQ_URL}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+      Resource: '*'
+functions:
+  processOrder:
+    handler: src/events/orderEventHandler.consumeOrderEvents
+    events:
+      - rabbitmq:
+          arn: arn:aws:rabbitmq:region:accountId:virtualhost/vhostName
+          queue: order_created
+  sendConfirmation:
+    handler: src/services/emailService.sendConfirmation
